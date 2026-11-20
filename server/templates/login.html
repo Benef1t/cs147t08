@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RiseQuest · Sign in</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="login-page">
+  <form class="card login" method="post" action="{{ url_for('login') }}">
+    <h1>RiseQuest</h1>
+    <p class="muted">Dashboard sign-in</p>
+    <input type="hidden" name="csrf" value="{{ csrf }}">
+    <label>Password <input type="password" name="password" autofocus required autocomplete="current-password"></label>
+    {% if error %}<p class="error">{{ error }}</p>{% endif %}
+    <button type="submit">Sign in</button>
+  </form>
+</body>
+</html>

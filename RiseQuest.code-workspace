@@ -1,0 +1,11 @@
+{
+  "folders": [
+    { "name": "firmware", "path": "firmware" },
+    { "name": "server", "path": "server" },
+    { "name": "tools", "path": "tools" },
+    { "name": "project root", "path": "." }
+  ],
+  "settings": {
+    "files.exclude": { "**/.pio": true, "**/.venv": true, "**/__pycache__": true }
+  }
+}

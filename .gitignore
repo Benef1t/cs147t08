@@ -1,0 +1,22 @@
+# Local credentials and signing keys
+/firmware/include/secrets.h
+.env
+.env.*
+!.env.example
+/keys/
+*.pem
+*.key
+*.p12
+*.pfx
+
+# build / runtime
+firmware/.pio/
+firmware/.vscode/c_cpp_properties.json
+firmware/.vscode/launch.json
+server/.venv/
+server/*.db
+server/*.db-*
+server/firmware/*.bin
+server/firmware/manifest.json
+__pycache__/
+.DS_Store

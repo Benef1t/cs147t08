@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf }}">
+  <title>RiseQuest Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">RiseQuest <span class="muted">· {{ device_id }}</span></div>
+  <div class="status" id="status"><span class="dot"></span><span id="status-text">connecting…</span></div>
+  <button class="ghost" id="logout">Sign out</button>
+</header>
+
+<main>
+  <section class="grid live-grid">
+    <div class="card stat">
+      <h3>Latch (commanded)</h3>
+      <div class="big" id="latch">–</div>
+      <div class="muted" id="latch-sub">&nbsp;</div>
+    </div>
+    <div class="card stat wide">
+      <h3>Unlock progress</h3>
+      <div class="progress"><div class="bar" id="progress-bar"></div></div>
+      <div class="row-between">
+        <span class="big-ish" id="progress-text">–</span>
+        <span class="muted" id="progress-sub">&nbsp;</span>
+      </div>
+    </div>
+    <div class="card stat">
+      <h3>Orientation</h3>
+      <div class="big" id="face">–</div>
+      <div class="muted" id="tilt">tilt – · pitch – · roll –</div>
+    </div>
+    <div class="card stat">
+      <h3>Acceleration (m/s²)</h3>
+      <div class="xyz">
+        <span><i class="sw s1"></i>x <b id="ax">–</b></span>
+        <span><i class="sw s2"></i>y <b id="ay">–</b></span>
+        <span><i class="sw s3"></i>z <b id="az">–</b></span>
+      </div>
+      <div class="muted" id="mag">|a| –</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="row-between">
+      <h2>Live acceleration · last 60 s</h2>
+      <div class="legend">
+        <span><i class="sw s1"></i>x</span><span><i class="sw s2"></i>y</span><span><i class="sw s3"></i>z</span>
+      </div>
+    </div>
+    <div class="chart" id="accel-chart"></div>
+  </section>
+
+  <section class="grid two">
+    <div class="card">
+      <h2>Device health</h2>
+      <dl class="kv" id="health"></dl>
+    </div>
+    <div class="card">
+      <h2>Unlocks per day · last 14 days</h2>
+      <div class="chart short" id="daily-chart"></div>
+      <p class="muted small" id="daily-summary"></p>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Unlock attempts</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>When</th><th>Outcome</th><th>Active time</th><th>Total time</th><th>Flips</th><th>Rejected</th></tr></thead>
+        <tbody id="attempts"><tr><td colspan="6" class="muted">No attempts yet</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="row-between">
+      <h2>Reliability by boot</h2>
+      <span class="muted small" id="rel-note"></span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Boot</th><th>Reset reason</th><th>FW</th><th>Uptime</th><th>Expected</th><th>Received</th><th>Missing</th><th>Queue overflow</th><th>Upload outages</th><th>Heartbeat gaps</th></tr></thead>
+        <tbody id="reliability"><tr><td colspan="10" class="muted">No data yet</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="grid two">
+    <div class="card">
+      <h2>Settings</h2>
+      <form id="settings" class="settings">
+        <label class="check"><input type="checkbox" name="alarm_enabled"> Alarm enabled</label>
+        <label>Alarm time <input type="time" name="alarm_time" required></label>
+        <label>Timezone (POSIX TZ) <input type="text" name="timezone" maxlength="47"></label>
+        <label>Required flipping (s) <input type="number" name="required_s" min="10" max="120"></label>
+        <label>Pause allowed between flips (ms) <input type="number" name="pause_ms" min="1000" max="5000" step="100"></label>
+        <label>Minimum flips <input type="number" name="min_flips" min="2" max="60"></label>
+        <label>Face threshold (cos × 100) <input type="number" name="face_cos_pct" min="60" max="95"></label>
+        <label>Heartbeat interval (s) <input type="number" name="heartbeat_s" min="10" max="600"></label>
+        <div class="row-between">
+          <span class="muted small" id="settings-msg"></span>
+          <button type="submit">Save</button>
+        </div>
+      </form>
+    </div>
+    <div class="card">
+      <h2>Recent events</h2>
+      <ul class="events" id="events"></ul>
+      <hr>
+      <h3>Emergency release</h3>
+      <p class="muted small">Opens the latch remotely without the flip task, e.g. if the sensor fails. Logged as a remote release.</p>
+      <button class="danger" id="release">Release latch</button>
+      <span class="muted small" id="release-msg"></span>
+    </div>
+  </section>
+</main>
+
+<div class="tooltip" id="tooltip" hidden></div>
+<script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+</body>
+</html>
